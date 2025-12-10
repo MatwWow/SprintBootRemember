@@ -20,21 +20,34 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<User>> findAllUsers(){
         return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(userService.findAllUser());
+                .ok(userService.findAllUser());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<User> findUserById(@PathVariable Long id){
         return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(userService.findUserById(id));
+                .ok(userService.findUserById(id));
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody @Valid User user){
+    public ResponseEntity<User> createUser(@Valid @RequestBody User user){
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(userService.createUser(user));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<User> editUserById(@PathVariable Long id,
+                                             @Valid @RequestBody User newUser){
+        return ResponseEntity
+                .ok(userService.editUserById(id, newUser));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUserById(@PathVariable Long id){
+        userService.deleteUserById(id);
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }

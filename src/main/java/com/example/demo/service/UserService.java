@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -27,4 +28,24 @@ public class UserService {
     public User createUser(User user){
         return userRepository.save(user);
     }
+
+    public User editUserById(Long id, User newUser){
+        User user = userRepository
+                .findById(id)
+                .orElseThrow(NotFindIdException::new);
+
+        user.setName(newUser.getName());
+        user.setPassword(newUser.getPassword());
+
+        return userRepository.save(user);
+    }
+
+    public void deleteUserById(Long id){
+        Optional<User> userOpt = userRepository.findById(id);
+
+        if(userOpt.isPresent()){
+            userRepository.deleteById(id);
+        }
+    }
+
 }
