@@ -27,16 +27,14 @@ public class UserService {
     }
 
     public UserResponseDTO findUserById(Long id){
-        Optional<User> userOpt = userRepository.findById(id);
+        User user = userRepository
+                .findById(id)
+                .orElseThrow(NotFindIdException::new);
 
-        if (userOpt.isPresent()){
-            User user = userOpt.get();
-            return new UserResponseDTO(
-                    user.getId(),
-                    user.getName(),
-                    user.getPassword());
-        }
-        throw new NotFindIdException();
+        return new UserResponseDTO(
+                user.getId(),
+                user.getName(),
+                user.getPassword());
     }
 
     public UserResponseDTO createUser(UserRequestDTO userRequestDTO){
@@ -46,7 +44,7 @@ public class UserService {
         return new UserResponseDTO(user.getId(), user.getName(), user.getPassword());
     }
 
-    public User editUserById(Long id, User newUser){
+    public UserResponseDTO editUserById(Long id, UserRequestDTO newUser){
         User user = userRepository
                 .findById(id)
                 .orElseThrow(NotFindIdException::new);
@@ -54,7 +52,8 @@ public class UserService {
         user.setName(newUser.getName());
         user.setPassword(newUser.getPassword());
 
-        return userRepository.save(user);
+        userRepository.save(user);
+        return new UserResponseDTO(user.getId(), user.getName(), user.getPassword());
     }
 
     public void deleteUserById(Long id){

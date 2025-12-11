@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +8,8 @@ import lombok.NoArgsConstructor;
 @Data()
 @Entity(name = "db_user")
 @Table(name = "tb_user")
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
     @Id

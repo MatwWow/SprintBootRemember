@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.request.UserRequestDTO;
 import com.example.demo.dto.response.UserResponseDTO;
-import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +40,8 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> editUserById(@PathVariable Long id,
-                                             @Valid @RequestBody User newUser){
+    public ResponseEntity<UserResponseDTO> editUserById(@PathVariable Long id,
+                                             @Valid @RequestBody UserRequestDTO newUser){
         return ResponseEntity
                 .ok(userService.editUserById(id, newUser));
     }
