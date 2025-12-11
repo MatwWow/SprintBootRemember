@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.request.UserRequestDTO;
+import com.example.demo.dto.response.UserResponseDTO;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
@@ -18,22 +20,24 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<User>> findAllUsers(){
+    public ResponseEntity<List<UserResponseDTO>> findAllUsers(){
         return ResponseEntity
                 .ok(userService.findAllUser());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> findUserById(@PathVariable Long id){
+    public ResponseEntity<UserResponseDTO> findUserById(@PathVariable Long id){
         return ResponseEntity
                 .ok(userService.findUserById(id));
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@Valid @RequestBody User user){
+    public ResponseEntity<UserResponseDTO> createUser(
+            @Valid @RequestBody UserRequestDTO userRequestDTO){
+
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(userService.createUser(user));
+                .body(userService.createUser(userRequestDTO));
     }
 
     @PutMapping("/{id}")

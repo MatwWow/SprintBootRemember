@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.request.UserRequestDTO;
+import com.example.demo.dto.response.UserResponseDTO;
 import com.example.demo.exception.NotFindIdException;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
@@ -15,18 +17,33 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<User> findAllUser(){
-        return userRepository.findAll();
+    public List<UserResponseDTO> findAllUser(){
+        return userRepository.findAll()
+                .stream()
+                .map(user -> new UserResponseDTO(
+                        user.getId(), user.getName(), user.getPassword()
+                ))
+                .toList();
     }
 
-    public User findUserById(Long id){
-        return userRepository
-                .findById(id)
-                .orElseThrow(NotFindIdException::new);
+    public UserResponseDTO findUserById(Long id){
+        Optional<User> userOpt = userRepository.findById(id);
+
+        if (userOpt.isPresent()){
+            User user = userOpt.get();
+            return new UserResponseDTO(
+                    user.getId(),
+                    user.getName(),
+                    user.getPassword());
+        }
+        throw new NotFindIdException();
     }
 
-    public User createUser(User user){
-        return userRepository.save(user);
+    public UserResponseDTO createUser(UserRequestDTO userRequestDTO){
+        User user = new User(userRequestDTO.getName(), userRequestDTO.getPassword());
+        userRepository.save(user);
+
+        return new UserResponseDTO(user.getId(), user.getName(), user.getPassword());
     }
 
     public User editUserById(Long id, User newUser){
